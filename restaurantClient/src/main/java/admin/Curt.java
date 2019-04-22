@@ -26,6 +26,16 @@ public class Curt implements Serializable{
 		this.eatnum = eatnum;
 	}
 
+	/**
+	 * @param eatid
+	 * @param eatnum
+	 */
+	public Curt(int eatid, int eatnum) {
+		super();
+		this.eatid = eatid;
+		this.eatnum = eatnum;
+	}
+
 	public int getTicketid() {
 		return ticketid;
 	}

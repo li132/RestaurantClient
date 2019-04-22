@@ -10,7 +10,7 @@ public class Ticket implements Serializable{
 	private int empid;
 	private Date date;
 	//打印编号
-	private UUID uuid;
+	private String uuid;
 	private Integer vipid;
 	
 	/**
@@ -26,7 +26,7 @@ public class Ticket implements Serializable{
 	 * @param uuid
 	 * @param vipid
 	 */
-	public Ticket(int id, int empid, Date date, UUID uuid, Integer vipid) {
+	public Ticket(int id, int empid, Date date, String uuid, Integer vipid) {
 		super();
 		this.id = id;
 		this.empid = empid;
@@ -41,9 +41,36 @@ public class Ticket implements Serializable{
 	 * @param date
 	 * @param uuid
 	 */
-	public Ticket(int id, int empid, Date date, UUID uuid) {
+	public Ticket(int id, int empid, Date date, String uuid) {
 		super();
 		this.id = id;
+		this.empid = empid;
+		this.date = date;
+		this.uuid = uuid;
+	}
+	
+	
+	/**
+	 * @param empid
+	 * @param date
+	 * @param uuid
+	 * @param vipid
+	 */
+	public Ticket(int empid, Date date, String uuid, Integer vipid) {
+		super();
+		this.empid = empid;
+		this.date = date;
+		this.uuid = uuid;
+		this.vipid = vipid;
+	}
+	
+	/**
+	 * @param empid
+	 * @param date
+	 * @param uuid
+	 */
+	public Ticket(int empid, Date date, String uuid) {
+		super();
 		this.empid = empid;
 		this.date = date;
 		this.uuid = uuid;
@@ -84,25 +111,25 @@ public class Ticket implements Serializable{
 
 
 
-	public UUID getUuid() {
+	public String getUuid() {
 		return uuid;
 	}
 
 
 
-	public void setUuid(UUID uuid) {
+	public void setUuid(String uuid) {
 		this.uuid = uuid;
 	}
 
 
 
-	public int getVipid() {
+	public Integer getVipid() {
 		return vipid;
 	}
 
 
 
-	public void setVipid(int vipid) {
+	public void setVipid(Integer vipid) {
 		this.vipid = vipid;
 	}
 

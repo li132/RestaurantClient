@@ -35,6 +35,21 @@ public class Menus implements Serializable{
 	}
 
 
+	/**
+	 * @param eatname
+	 * @param typeid
+	 * @param eatlevel
+	 * @param eatstock
+	 * @param eatprice
+	 */
+	public Menus(String eatname, int typeid, int eatlevel, int eatstock, double eatprice) {
+		super();
+		this.eatname = eatname;
+		this.typeid = typeid;
+		this.eatlevel = eatlevel;
+		this.eatstock = eatstock;
+		this.eatprice = eatprice;
+	}
 	public int getEatid() {
 		return eatid;
 	}

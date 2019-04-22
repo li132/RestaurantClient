@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Customer implements Serializable{
 	private int curid;
 	private String curname;
-	private String cuesex;
+	private String cursex;
 	private int curphone;
 	
 	/**
@@ -20,11 +20,11 @@ public class Customer implements Serializable{
 	 * @param cuesex
 	 * @param curphone
 	 */
-	public Customer(int curid, String curname, String cuesex, int curphone) {
+	public Customer(int curid, String curname, String cursex, int curphone) {
 		super();
 		this.curid = curid;
 		this.curname = curname;
-		this.cuesex = cuesex;
+		this.cursex = cursex;
 		this.curphone = curphone;
 	}
 	public int getCurid() {
@@ -39,11 +39,11 @@ public class Customer implements Serializable{
 	public void setCurname(String curname) {
 		this.curname = curname;
 	}
-	public String getCuesex() {
-		return cuesex;
+	public String getCursex() {
+		return cursex;
 	}
-	public void setCuesex(String cuesex) {
-		this.cuesex = cuesex;
+	public void setCursex(String cuesex) {
+		this.cursex = cuesex;
 	}
 	public int getCurphone() {
 		return curphone;
@@ -54,6 +54,6 @@ public class Customer implements Serializable{
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
-		return this.curid+"\t"+this.curname+"\t"+this.cuesex+"\t"+this.curphone;
+		return this.curid+"\t"+this.curname+"\t"+this.cursex+"\t"+this.curphone;
 	}
 }

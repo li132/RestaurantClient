@@ -1,6 +1,5 @@
 package active;
 
-import java.security.PublicKey;
 import java.util.List;
 
 import java.util.Map;
@@ -16,13 +15,13 @@ public interface restService {
 	//登录
 	public Employee login(int id,String password);
 	//订单行信息增加
-	public String addCurt(int id,Map<Integer, Integer> m);
+	public String addCurt(Map<Integer, Integer> m);
 	//订单行删除信息 根据id
 	public String deleteCurt(int id);
 	//订单行删除全部信息
 	public String deleteAllCurt();
 	//订单行查询全部信息
-	public Map<Integer, Integer> selectAllCurt();
+	public Map<Integer, Integer> selectAllCurt(int id);
 	//根据id更改物品数量
 	public String updateCurt(int id);
 	//录入员工信息
@@ -67,10 +66,16 @@ public interface restService {
 	public List<Menus> selectAllMenu();
 	//根据id查询 
 	public Menus selectMenuById(int id);
+	//录入菜品类别
+	public String addType(Type t);
 	//查询所有菜品类别 id 名称
 	public List<Type> selectAllType();
 	//根据id查找具体菜类别
 	public Type selectTypeById(int id);
+	//根据id修改菜品类别
+	public String updateTypeById(Type t);
+	//根据id删除菜品类别
+	public String deleteTypeById(int id);
 	//根据菜品种类id查询所有菜品
 	public List<Menus> selectAllMuByTp(int id);
 	//查询菜品月销量 降序 list
@@ -80,9 +85,9 @@ public interface restService {
 	//更改销量
 	public String updateSal(Salnum s);
 	//查询销量是否存在
-	public boolean selectSal(int id);
+	public Salnum selectSal(int id);
 	//打印小票抬头
-	public void printTicket(int id);
+	public List<Ticket> printTicket();
 	//录入小票抬头
 	public String addTicket(Ticket t);
 	//返回最大id数+1；
