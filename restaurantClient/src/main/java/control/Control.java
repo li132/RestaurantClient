@@ -19,6 +19,7 @@ import admin.Salnum;
 import admin.Ticket;
 import admin.Type;
 import admin.Vip;
+import util.ToExcelUtil;
 import util.UserInput;
 import view.View;
 
@@ -192,6 +193,8 @@ public class Control {
 							salDesc();
 						}else if (desc==2) {
 							printTick();
+						}else if (desc==3) {
+							ToExcel();
 						}else {
 							System.out.println("输入错误！");
 							continue;
@@ -203,6 +206,15 @@ public class Control {
 				}
 			}
 		}
+	}
+	private void ToExcel() {
+		List<String> list = service.selectAllNum();
+		try {
+			ToExcelUtil.toEx(list);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
 	}
 	private void selectVipById() {
 		while (true) {
@@ -789,18 +801,24 @@ public class Control {
 	}
 	//菜品销量排行
 	public void salDesc() {
-		List<Salnum> list = service.selectAllNum();
+		List<String> list = service.selectAllNum();
 		System.out.println("菜品名称\t菜品销量");
-		v.show(list);
+		for (String string : list) {
+			String[] split = string.split("-");
+			System.out.println(split[0]+"\t"+split[1]);
+		}
 	}
+	//打印订单
 	public void printTick() {
 		List<Ticket> list = service.printTicket();
+		System.out.println("订单ID\t员工ID\t开票时间\t\t会员卡号（无会员卡默认为0）");
 		for (Ticket ticket : list) {
 			System.out.println(ticket.getId()+"\t"+ticket.getEmpid()+"\t"+ticket.getDate()+"\t"+ticket.getVipid());
 		}
 		int id = this.ui.getInt("请输入订单ID：");
 		Map<Integer, Integer> map = service.selectAllCurt(id);
 		Set<Integer> set = map.keySet();
+		System.out.println("菜品编号\t菜品名称\t购买数量");
 		for (Integer i : set) {
 			System.out.println(i+"\t"+service.selectMenuById(i).getEatname()+"\t"+map.get(i));
 		}

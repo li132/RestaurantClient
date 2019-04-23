@@ -101,6 +101,7 @@ public class View {
 		System.out.println();
 		System.out.println("1.统计菜品销量排行");
 		System.out.println("2.打印所有订单");
+		System.out.println("3.EXCEL导出菜品销量排行");
 		System.out.println("0.返回");
 	}
 }

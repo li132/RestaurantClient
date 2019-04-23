@@ -79,7 +79,7 @@ public interface restService {
 	//根据菜品种类id查询所有菜品
 	public List<Menus> selectAllMuByTp(int id);
 	//查询菜品月销量 降序 list
-	public List<Salnum> selectAllNum();
+	public List<String> selectAllNum();
 	//插入销量
 	public String addSal(Salnum s);
 	//更改销量
