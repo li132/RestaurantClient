@@ -6,7 +6,7 @@ public class Customer implements Serializable{
 	private int curid;
 	private String curname;
 	private String cursex;
-	private int curphone;
+	private Long curphone;
 	
 	/**
 	 * 
@@ -20,7 +20,7 @@ public class Customer implements Serializable{
 	 * @param cuesex
 	 * @param curphone
 	 */
-	public Customer(int curid, String curname, String cursex, int curphone) {
+	public Customer(int curid, String curname, String cursex, Long curphone) {
 		super();
 		this.curid = curid;
 		this.curname = curname;
@@ -45,10 +45,10 @@ public class Customer implements Serializable{
 	public void setCursex(String cuesex) {
 		this.cursex = cuesex;
 	}
-	public int getCurphone() {
+	public Long getCurphone() {
 		return curphone;
 	}
-	public void setCurphone(int curphone) {
+	public void setCurphone(Long curphone) {
 		this.curphone = curphone;
 	}
 	@Override

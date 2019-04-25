@@ -21,6 +21,18 @@ public class UserInput {
 		}
 	}
 	
+	public long getLong(String msg) {
+		while (true) {
+			try {
+				System.out.println(msg);
+				Scanner sc=new Scanner(System.in);
+				return sc.nextLong();
+			} catch (Exception e) {
+				System.out.println("输入内容格式不正确，请输入长整数类型！");
+			}
+		}
+	}
+	
 	public double getDouble(String msg) {
 		while (true) {
 			try {

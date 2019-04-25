@@ -75,11 +75,12 @@ public class View {
 	}
 	public void foods() {
 		System.out.println();
-		System.out.println("1.添加菜品");
-		System.out.println("2.下架菜品");
-		System.out.println("3.更改菜品");
-		System.out.println("4.查询所有菜品");
-		System.out.println("5.根据id查询菜品");
+		System.out.println("1.添加菜品类别");
+		System.out.println("2.添加菜品");
+		System.out.println("3.下架菜品");
+		System.out.println("4.更改菜品");
+		System.out.println("5.查询所有菜品");
+		System.out.println("6.根据id查询菜品");
 		System.out.println("0.返回");
 	}
 	public void updateFoods() {

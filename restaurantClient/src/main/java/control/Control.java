@@ -3,6 +3,7 @@ package control;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +20,8 @@ import admin.Salnum;
 import admin.Ticket;
 import admin.Type;
 import admin.Vip;
+import util.PrintTicket;
+import util.PrintVipTicket;
 import util.ToExcelUtil;
 import util.UserInput;
 import view.View;
@@ -143,30 +146,40 @@ public class Control {
 				}else if (select==3) {
 					freeze();
 				}else if (select==4) {
-					v.foods();
-					int sc=this.ui.getInt("请选择：");
-					if (sc==0) {
-						break;
-					}else if (sc==1) {
-						addMenu();
-					}else if (sc==2) {
-						deleteMenu();
-					}else if (sc==3) {
-						while (true) {
-							v.updateFoods();
-							int ss = this.ui.getInt("请选择：");
-							if (ss==0) {
-								break;
-							}
-							updateFood(ss);
+					while (true) {
+						v.foods();
+						int sc=this.ui.getInt("请选择：");
+						if (sc==0) {
+							break;
+						}else if (sc==1) {
+							addType();
 							continue;
-						}						
-					}else if (sc==4) {
-						v.show(service.selectAllMenu());
-					}else if (sc==5) {
-						selectMenById();
+						}else if (sc==2) {
+							addMenu();
+							continue;
+						}else if (sc==3) {
+							deleteMenu();
+							continue;
+						}else if (sc==4) {
+							while (true) {
+								v.updateFoods();
+								int ss = this.ui.getInt("请选择：");
+								if (ss==0) {
+									break;
+								}
+								updateFood(ss);
+								continue;
+							}						
+						}else if (sc==5) {
+							v.show(service.selectAllMenu());
+							continue;
+						}else if (sc==6) {
+							selectMenById();
+							continue;
+						}
 					}
-				}else if (select==5) {				
+					
+				}else if (select==5) {
 					while (true) {
 						v.vip();
 						int ii = this.ui.getInt("请选择：");
@@ -207,6 +220,21 @@ public class Control {
 			}
 		}
 	}
+	private void addType() {
+		while (true) {
+			int tpID = this.ui.getInt("请输入菜品种类ID：");
+			if (service.selectTypeById(tpID)!=null) {
+				System.out.println("该种类已存在，请重新输入！");
+				continue;
+			}
+			String name = this.ui.getString("请输入种类名称：");
+			service.addType(new Type(tpID, name));
+			System.out.println("添加种类成功！");
+			break;
+		}
+
+	}
+
 	private void ToExcel() {
 		List<String> list = service.selectAllNum();
 		try {
@@ -417,7 +445,7 @@ public class Control {
 							System.out.println("输入错误，请重新输入！");
 							continue;
 						}else {
-							updateSal();							
+							updateSal();
 							ticket(sum,pay);
 							curt.clear();
 							break loop;
@@ -455,23 +483,33 @@ public class Control {
 			}
 		}
 	}
+	public List<String> getList() {
+		List<String> list =new ArrayList<String>();
+		Set<Integer> set = curt.keySet();
+		for (Integer id : set) {
+			list.add(id+"-"+service.selectMenuById(id).getEatname()+"-"+curt.get(id)+"-"+service.selectMenuById(id).getEatprice());
+		}
+		return list;
+	}
 	//打印现金支付小票
 	public void ticket(double num,double pay) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			String uuid = UUID.randomUUID().toString().replaceAll("-", "");
-			Ticket t = new Ticket(emp.getEmpid(),df.parse(df.format(new Date())),uuid, null);
+			String nowt=df.format(new Date());
+			Ticket t = new Ticket(emp.getEmpid(),df.parse(nowt),uuid, null);
 			service.addTicket(t);
 			service.addCurt(curt);
 			System.out.println("******欢迎下次光临*******");
 			System.out.println(t.getUuid());
 			System.out.println("收银员："+emp.getEmpid());
-			System.out.println("开票时间："+df.format(new Date()));
+			System.out.println("开票时间："+nowt);
 			System.out.println("-------------------------");
 			showAllFood();
 			System.out.println("-------------------------");
 			System.out.println("总价："+num);
 			System.out.println("支付："+pay+"\t找零："+(pay-num));
+			PrintTicket.to_EX(t, pay, getList());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -494,7 +532,8 @@ public class Control {
 			System.out.println("-------------------------");
 			System.out.println("会员卡号："+v.getVipid());
 			System.out.println("总价："+num+"\t应付："+Math.round(v.getVipdiscount()*num));
-			System.out.println("支付："+Math.round(v.getVipdiscount()*num)+"\t账户余额:"+(v.getVipdalance()-Math.round(v.getVipdiscount()*num)));
+			System.out.println("支付："+Math.round(v.getVipdiscount()*num)+"\t账户余额:"+Math.round(v.getVipdalance()-v.getVipdiscount()*num));
+			PrintVipTicket.to_EX(t, getList(), v);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -505,7 +544,6 @@ public class Control {
 		System.out.println("编号\t名称\t数量\t单价");
 		Set<Integer> set = curt.keySet();
 		for (Integer id : set) {
-
 			System.out.println(id+"\t"+service.selectMenuById(id).getEatname()+"\t"+curt.get(id)+"\t"+service.selectMenuById(id).getEatprice());
 		}
 	}
@@ -536,13 +574,46 @@ public class Control {
 	//开卡的方法
 	public void addVIP(){
 		System.out.println();
-		int curId = this.ui.getInt("请输入顾客编号：");
+		Integer curId = null;
+		while (true) {
+			curId=this.ui.getInt("请输入顾客编号（请输入4位数字）：");
+			if (curId.toString().length()==4) {
+				break;
+			}
+			System.out.println("输入错误，请重新输入！");
+			continue;
+		}
 		String name = this.ui.getString("请输入顾客姓名：");
-		String sex = this.ui.getString("请输入顾客性别：");
-		int phone = this.ui.getInt("请输入顾客联系方式：");
+		String sex=null;
+		while (true) {
+			sex = this.ui.getString("请输入顾客性别（男/女）：");
+			if (sex.equals("男")||sex.equals("女")) {
+				break;
+			}
+			System.out.println("输入错误，请重新输入！");
+			continue;
+		}
+		
+		Long phone = null;
+		while (true) {
+			phone = this.ui.getLong("请输入顾客联系方式(11位号码)：");
+			if (phone.toString().length()==11) {
+				break;
+			}
+			System.out.println("请输入11位号码！");
+			continue;
+		}
 		service.addCustomer(new Customer(curId, name, sex, phone));
 		while (true) {
-			int vipid = this.ui.getInt("请输入会员卡号：");
+			Integer vipid = null;
+			while (true) {
+				vipid = this.ui.getInt("请输入新的会员卡号（请输入5位数字）：");
+				if (vipid.toString().length()==5) {
+					break;
+				}
+				System.out.println("输入错误，请重新输入！");
+				continue;
+			}
 			Vip vip = service.selectVipById(vipid);
 			if (vip!=null) {
 				System.out.println("此卡号已注册！");
@@ -552,13 +623,13 @@ public class Control {
 			if (money<=0) {
 				System.out.println("输入错误，请重新输入！");
 				continue;
-			}else if (money<800) {
+			}if (money<800) {
 				service.addVip(new Vip(vipid, curId, 1, 1, 0.98, money));
 				break;
-			}else {
+			}
 				service.addVip(new Vip(vipid, curId, 2, 1, 0.92, money));
 				break;
-			}		
+					
 		}
 		System.out.println("开卡成功，恭喜您成为本店会员！");
 	}
@@ -646,7 +717,15 @@ public class Control {
 				System.out.println("姓名验证失败！请重新输入！");
 				continue;
 			}
-			int newVipId = this.ui.getInt("请输入新的会员卡号：");
+			Integer newVipId = null;
+			while (true) {
+				newVipId = this.ui.getInt("请输入新的会员卡号（请输入5位数字）：");
+				if (newVipId.toString().length()==5) {
+					break;
+				}
+				System.out.println("输入错误，请重新输入！");
+				continue;
+			}
 			Vip vip2 = service.selectVipById(newVipId);
 			if (vip2!=null) {
 				System.out.println("✖输入错误✖，该会员已存在！");
@@ -661,7 +740,15 @@ public class Control {
 	//添加员工
 	public void addEmp() {
 		while (true) {
-			int empId = this.ui.getInt("请输入员工账号：");
+			Integer empId = null;
+			while (true) {
+				empId = this.ui.getInt("请输入员工账号(请输入5位数字)：");
+				if (empId.toString().length()==5) {
+					break;
+				}
+				System.out.println("输入错误，请重新输入！");
+				continue;
+			}
 			Employee emp = service.selectEmployeeById(empId);
 			if (emp!=null) {
 				System.out.println("该账号已被注册，请重新输入！");
@@ -669,8 +756,24 @@ public class Control {
 			}
 			String password = this.ui.getString("请输入登录密码：");
 			String name = this.ui.getString("请输入员工姓名：");
-			String sex = this.ui.getString("请输入员工性别：");
-			int phone = this.ui.getInt("请输入员工联系方式：");
+			String sex=null;
+			while (true) {
+				sex = this.ui.getString("请输入员工性别（男/女）：");
+				if (sex.equals("男")||sex.equals("女")) {
+					break;
+				}
+				System.out.println("输入错误，请重新输入！");
+				continue;
+			}
+			Long phone = null;
+			while (true) {
+				phone = this.ui.getLong("请输入员工联系方式(11位号码)：");
+				if (phone.toString().length()==11) {
+					break;
+				}
+				System.out.println("请输入11位号码！");
+				continue;
+			}
 			service.addEmployee(new Employee(empId, name, sex, phone, 1, password));
 			break;
 		}		
@@ -705,7 +808,15 @@ public class Control {
 				service.updateEmployee(new Employee(empId, name, employee.getEmpsex(), employee.getEmpphone(), emp.getEmplevel(), employee.getEmppassword()));
 				break;
 			}else if (n==2) {
-				int phone = this.ui.getInt("请输入联系方式：");
+				Long phone = null;
+				while (true) {
+					phone = this.ui.getLong("请输入员工联系方式(11位号码)：");
+					if (phone.toString().length()==11) {
+						break;
+					}
+					System.out.println("请输入11位号码！");
+					continue;
+				}
 				service.updateEmployee(new Employee(empId, employee.getEmpname(), employee.getEmpsex(), phone, emp.getEmplevel(), employee.getEmppassword()));
 				break;
 			}else if (n==3) {

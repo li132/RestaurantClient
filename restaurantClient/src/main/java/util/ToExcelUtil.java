@@ -17,7 +17,7 @@ public class ToExcelUtil {
         // 第一步，创建一个webbook，对应一个Excel文件
         HSSFWorkbook wb = new HSSFWorkbook();
         // 第二步，在webbook中添加一个sheet,对应Excel文件中的sheet
-        HSSFSheet sheet = wb.createSheet("学生表一");
+        HSSFSheet sheet = wb.createSheet("销量表一");
         // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制short
         HSSFRow row = sheet.createRow((int) 0);
         // 第四步，创建单元格，并设置值表头 设置表头居中
@@ -60,8 +60,3 @@ public class ToExcelUtil {
         }
     }
 }
-/*--------------------- 
-作者：明天你好丶 
-来源：CSDN 
-原文：https://blog.csdn.net/qq_30073735/article/details/71418779 
-版权声明：本文为博主原创文章，转载请附上博文链接！*/

@@ -6,7 +6,7 @@ public class Employee implements Serializable{
 	private int empid;
 	private String empname;
 	private String empsex;
-	private int empphone;
+	private Long empphone;
 	private int emplevel;
 	private String emppassword;
 	
@@ -24,7 +24,7 @@ public class Employee implements Serializable{
 	 * @param empphone
 	 * @param emplevel
 	 */
-	public Employee(int empid, String empname, String empsex, int empphone, int emplevel, String emppassword) {
+	public Employee(int empid, String empname, String empsex, Long empphone, int emplevel, String emppassword) {
 		super();
 		this.empid = empid;
 		this.empname = empname;
@@ -58,11 +58,11 @@ public class Employee implements Serializable{
 		this.empsex = empsex;
 	}
 
-	public int getEmpphone() {
+	public Long getEmpphone() {
 		return empphone;
 	}
 
-	public void setEmpphone(int empphone) {
+	public void setEmpphone(Long empphone) {
 		this.empphone = empphone;
 	}
 
